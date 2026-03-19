@@ -78,7 +78,7 @@ export default function ResultsPage() {
             a.click();
             a.remove();
             URL.revokeObjectURL(url);
-        } catch (err: unknown) {
+        } catch {
             setError("Failed to download PDF. Please try again.");
         } finally {
             setIsDownloading(false);

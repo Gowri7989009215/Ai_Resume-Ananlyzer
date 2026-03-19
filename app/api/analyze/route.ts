@@ -51,6 +51,9 @@ export async function POST(req: NextRequest) {
         const extractedData = parseResume(rawText);
         const analysisResult = scoreResume(extractedData);
 
+        // Increment the global upload counter (fire-and-forget)
+        fetch(`${req.nextUrl.origin}/api/counter`, { method: "POST" }).catch(() => {});
+
         return NextResponse.json(analysisResult, { status: 200 });
     } catch (error: unknown) {
         console.error("[/api/analyze] Error:", error);

@@ -2,6 +2,27 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+/** Animate a number counting up from `from` to `to` */
+function useCountUp(to: number, duration = 1800) {
+  const [value, setValue] = useState(0);
+  const raf = useRef<number | null>(null);
+  useEffect(() => {
+    if (to === 0) return;
+    const start = performance.now();
+    const step = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.floor(eased * to));
+      if (progress < 1) raf.current = requestAnimationFrame(step);
+    };
+    raf.current = requestAnimationFrame(step);
+    return () => { if (raf.current) cancelAnimationFrame(raf.current); };
+  }, [to, duration]);
+  return value;
+}
 
 const features = [
   {
@@ -75,6 +96,17 @@ const cardVariants = {
 };
 
 export default function HomePage() {
+  const [resumeCount, setResumeCount] = useState(500);
+
+  useEffect(() => {
+    fetch("/api/counter")
+      .then((r) => r.json())
+      .then((d) => { if (d.count) setResumeCount(d.count); })
+      .catch(() => {});
+  }, []);
+
+  const animatedCount = useCountUp(resumeCount);
+
   return (
     <div className="bg-white">
       {/* Hero */}
@@ -152,14 +184,14 @@ export default function HomePage() {
             transition={{ delay: 0.7, duration: 0.6 }}
           >
             {[
+              { value: `${animatedCount.toLocaleString()}+`, label: "Resumes Analysed & Optimised", highlight: true },
               { value: "0–100", label: "ATS Score" },
               { value: "6", label: "Section Analysis" },
               { value: "40+", label: "Keyword Checks" },
-              { value: "0", label: "Data Stored" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-3xl font-black text-blue-600">{stat.value}</div>
-                <div className="text-sm text-slate-500 font-medium mt-1">{stat.label}</div>
+                <p className={`text-3xl font-black ${(stat as any).highlight ? "text-blue-600" : "text-slate-900"}`}>{stat.value}</p>
+                <p className="text-xs text-slate-500 mt-1 font-medium">{stat.label}</p>
               </div>
             ))}
           </motion.div>

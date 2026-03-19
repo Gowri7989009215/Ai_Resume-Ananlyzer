@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ImprovedResume } from "@/lib/types";
-import { generateResumeText, getRoleHeadline } from "@/lib/template";
+import { getRoleHeadline } from "@/lib/template";
 
 export const runtime = "nodejs";
 
@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
         }
 
         // Generate PDF using pdfkit
-        // @ts-ignore
         const PDFDocument = (await import("pdfkit")).default;
 
         const doc = new PDFDocument({
@@ -121,8 +120,8 @@ export async function POST(req: NextRequest) {
             const skillsPerRow = 3;
             const colWidth = pageWidth / skillsPerRow;
             // col unused — skills are positioned by index
-            let startX = 60;
-            let startY = doc.y;
+            const startX = 60;
+            const startY = doc.y;
 
             resumeData.skills.forEach((skill, i) => {
                 const x = startX + (i % skillsPerRow) * colWidth;
@@ -182,7 +181,7 @@ export async function POST(req: NextRequest) {
                         .text(edu.institution);
                 }
                 const details: string[] = [];
-                if (edu.year) details.push(edu.year);
+                if (edu.dates) details.push(edu.dates);
                 if (edu.cgpa) details.push(`CGPA: ${edu.cgpa}`);
                 if (details.length > 0) {
                     doc

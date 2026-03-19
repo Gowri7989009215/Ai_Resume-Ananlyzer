@@ -208,7 +208,7 @@ function extractEducation(text: string, lines: string[]): EducationEntry[] {
                 entries.push({
                     degree: currentEntry.degree || "",
                     institution: currentEntry.institution || "",
-                    year: currentEntry.year || "",
+                    dates: currentEntry.dates || "",
                     cgpa: currentEntry.cgpa || "",
                 });
                 currentEntry = {};
@@ -223,7 +223,7 @@ function extractEducation(text: string, lines: string[]): EducationEntry[] {
             currentEntry.institution = line;
         }
 
-        if (yearMatch) currentEntry.year = yearMatch[0];
+        if (yearMatch) currentEntry.dates = yearMatch[0];
         if (cgpaMatch) currentEntry.cgpa = cgpaMatch[1];
     }
 
@@ -231,7 +231,7 @@ function extractEducation(text: string, lines: string[]): EducationEntry[] {
         entries.push({
             degree: currentEntry.degree || "",
             institution: currentEntry.institution || "",
-            year: currentEntry.year || "",
+            dates: currentEntry.dates || "",
             cgpa: currentEntry.cgpa || "",
         });
     }
@@ -336,6 +336,7 @@ export function parseResume(rawText: string): ExtractedData {
         github: extractGitHub(text),
         portfolio: extractPortfolio(text),
         skills: extractSkills(text),
+        experience: [], // Added empty experience array to satisfy ExtractedData type
         education: extractEducation(text, lines),
         projects: extractProjects(text, lines),
         rawText: text,

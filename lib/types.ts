@@ -8,21 +8,42 @@ export interface ExtractedData {
   github: string;
   portfolio: string;
   skills: string[];
+  experience: ExperienceEntry[];
   education: EducationEntry[];
   projects: ProjectEntry[];
+  summary?: string;
   rawText: string;
+  personalInfo?: {
+    name?: string;
+    role?: string;
+    email?: string;
+    phone?: string;
+    location?: string;
+  };
+}
+
+export interface ExperienceEntry {
+  title: string;
+  company: string;
+  dates: string;
+  location: string;
+  date?: string; // added for backward compat
+  description: string[];
 }
 
 export interface EducationEntry {
   degree: string;
   institution: string;
-  year: string;
-  cgpa: string;
+  dates: string;
+  cgpa?: string;
+  date?: string; // added for backward compat
+  achievements?: string[];
 }
 
 export interface ProjectEntry {
   title: string;
   description: string;
+  technologies?: string[];
 }
 
 export interface SectionScore {
@@ -49,6 +70,7 @@ export interface ImprovedResume {
   portfolio: string;
   summary: string;
   skills: string[];
+  experience: ExperienceEntry[];
   projects: ProjectEntry[];
   education: EducationEntry[];
 }

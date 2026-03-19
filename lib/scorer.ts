@@ -75,7 +75,7 @@ function scoreSkills(data: ExtractedData): SectionScore {
 /**
  * Score projects section
  */
-function scoreProjects(data: ExtractedData, rawText: string): SectionScore {
+function scoreProjects(data: ExtractedData): SectionScore {
     let score = SCORE_WEIGHTS.projects;
     const feedback: string[] = [];
 
@@ -174,7 +174,7 @@ function scoreKeywordMatch(data: ExtractedData): {
     }
 
     const matchRate = matchedKeywords.length / SKILLS_KEYWORDS.length;
-    let score = Math.round(matchRate * SCORE_WEIGHTS.keywordMatch);
+    const score = Math.round(matchRate * SCORE_WEIGHTS.keywordMatch);
 
     const topMissing = missingKeywords.slice(0, 8);
 
@@ -285,7 +285,7 @@ function generateSuggestions(
 export function scoreResume(data: ExtractedData): AnalysisResult {
     const contactScore = scoreContactInfo(data);
     const skillsScore = scoreSkills(data);
-    const projectsScore = scoreProjects(data, data.rawText);
+    const projectsScore = scoreProjects(data);
     const educationScore = scoreEducation(data);
     const { sectionScore: keywordScore, missingKeywords } = scoreKeywordMatch(data);
     const structureScore = scoreStructure(data, data.rawText);

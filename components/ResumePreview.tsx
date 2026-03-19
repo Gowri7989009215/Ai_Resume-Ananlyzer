@@ -88,8 +88,8 @@ export default function ResumePreview({ data }: ResumePreviewProps) {
                                     <p className="text-sm text-slate-600">{edu.institution}</p>
                                 )}
                                 <div className="flex gap-3 mt-1">
-                                    {edu.year && (
-                                        <span className="text-xs text-slate-400">{edu.year}</span>
+                                    {edu.dates && (
+                                        <span className="text-xs text-slate-400">{edu.dates}</span>
                                     )}
                                     {edu.cgpa && (
                                         <span className="text-xs text-emerald-600 font-medium">

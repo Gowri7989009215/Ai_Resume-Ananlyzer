@@ -148,6 +148,7 @@ export function generateImprovedResume(data: ExtractedData): ImprovedResume {
         }))
             // Drop completely empty projects so we don't create fake ones
             .filter((p) => p.title.trim().length > 0 || p.description.trim().length > 0),
+        experience: data.experience || [],
         // Use education exactly as extracted, without default values.
         education: data.education,
     };
@@ -239,7 +240,7 @@ export function generateResumeText(resume: ImprovedResume): string {
             if (edu.degree) lines.push(edu.degree);
             if (edu.institution) lines.push(edu.institution);
             const details: string[] = [];
-            if (edu.year) details.push(edu.year);
+            if (edu.dates) details.push(edu.dates);
             if (edu.cgpa) details.push(`CGPA: ${edu.cgpa}`);
             if (details.length > 0) lines.push(details.join(" | "));
             lines.push("");
