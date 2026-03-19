@@ -6,10 +6,19 @@
  * breaks the default-export. Using `eval("require")` is the standard
  * escape-hatch to force Node's native CJS loader at runtime.
  */
+export async function pdfParse(buffer: Buffer) {
+  try {
+    // ✅ Dynamic import (works in Vercel)
+    const pdfModule = await import("pdf-parse");
 
-const nativeRequire = eval("require") as NodeJS.Require;
+    // Handle both default + named export cases
+    const pdf = pdfModule.default || pdfModule;
 
-// pdf-parse v1.x: module.exports = function(dataBuffer, options) { ... }
-const pdfParse: (buf: Buffer) => Promise<{ text: string }> = nativeRequire("pdf-parse");
+    const data = await pdf(buffer);
 
-export { pdfParse };
+    return data;
+  } catch (error) {
+    console.error("PDF Parse Error:", error);
+    throw new Error("Failed to parse PDF");
+  }
+}
